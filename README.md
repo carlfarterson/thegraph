@@ -3,6 +3,6 @@ This repository contains all code and testing done using thegraph.  Fork and ite
 
 ## Contents
 ### Uniswap
-Contains subgraphs for (Uniswap)[uniswap.exchange].
+Contains subgraphs for [Uniswap](uniswap.exchange).
 
 
