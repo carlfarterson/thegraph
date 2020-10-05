@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import blocks from './blocks.json'
 
 import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery } from '@apollo/client';
 
-const PAIR1 = gql`
+const PAIR_DYNAMIC = gql`
   query GetPair($id: String!) {
     pair (id: $id) {
       id
@@ -18,7 +18,7 @@ const PAIR1 = gql`
   }
 `;
 
-const PAIR2 = gql`
+const PAIR_STATIC = gql`
   {
     pair(id: "0xbb2b8038a1640196fbe3e38816f3e67cba72d940") {
       txCount
@@ -33,12 +33,13 @@ const client = new ApolloClient({
 })
 
 function StaticPair() {
-  const { loading, error, data } = useQuery(PAIR2);
-  
+  const { loading, error, data } = useQuery(PAIR_STATIC);
+
   if (loading) return null;
   if (error) return `Error! ${error}`;
 
   console.log(data);
+  console.log(blocks);
   return (
     <div>
       Success!
@@ -46,15 +47,19 @@ function StaticPair() {
   )
 }
 
-function FetchPair(address) {
-  const { loading, error, data } = useQuery(PAIR1, {
-    variables: { address },
+// function FetchPair(address) {
+function FetchPair() {
+  let address = "0xbb2b8038a1640196fbe3e38816f3e67cba72d940";
+  const { loading, error, data } = useQuery(PAIR_DYNAMIC, {
+    variables: { id: address },
   });
 
   if (loading) return null;
   if (error) return `Error! ${error}`;
 
-  console.log(data);
+  return (
+    JSON.stringify(data)
+  )
 }
 
 export default class App extends Component {
@@ -63,8 +68,7 @@ export default class App extends Component {
     return (
       <div className="App">
         <ApolloProvider client={client}>
-          {/* <FetchPair /> */}
-          <StaticPair />
+          <FetchPair />
         </ApolloProvider>
       </div>
     );
